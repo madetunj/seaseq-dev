@@ -15,7 +15,8 @@ requirements:
 
 inputs:
 # main files & directorys
-  reference: Directory
+  in_fasta: File
+  bowtie_index: File
   gtffile: File
   fastqfile: File[]
   chromsizes: File
@@ -98,7 +99,7 @@ steps:
       fastqfile: fastqfile
       limit_alignments: limit_alignments
       processors: processors
-      reference: reference
+      bowtie_index: bowtie_index
     out: [samfile]
     scatter: [readLengthFile, fastqfile]
     scatterMethod: dotproduct
@@ -253,7 +254,7 @@ steps:
 # MOTIF analysis
   MOTIFS:
     in:
-      reference: reference
+      in_fasta: in_fasta
       bedfile: MACS-Auto/peaksbedfile
       motifdatabases: motifdatabases
     out: [memechipdir, amedir, bedfasta]
@@ -271,7 +272,7 @@ steps:
   
   SummitMOTIFS:
     in:
-      reference: reference
+      in_fasta: in_fasta
       bedfile: FlankBED/outfile
       motifdatabases: motifdatabases
     out: [memechipdir, amedir, bedfasta]

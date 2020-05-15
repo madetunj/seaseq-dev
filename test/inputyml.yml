@@ -1,8 +1,12 @@
 #Files and Directories
 
-reference: 
-  class: Directory
-  location: ./hg19/CHR21INDEX
+in_fasta: 
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.fa
+
+bowtie_index:
+  class: File
+  locatio: ./hg19/CHR21INDEX/hg19_chr21.rev.1.ebwt
 
 fastqfile: 
   - { class: File, path: ./fastqfiles/H3K27Ac-AB5_R1_001.fastq.gz }

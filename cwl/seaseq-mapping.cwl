@@ -7,7 +7,7 @@ requirements:
   - class: SubworkflowFeatureRequirement
 
 inputs:
-  reference: Directory
+  bowtie_index: File
   fastqfile: File[]
   chromsizes: File
   blacklistfile: File
@@ -101,7 +101,7 @@ steps:
       fastqfile: fastqfile
       limit_alignments: limit_alignments
       processors: processors
-      reference: reference
+      bowtie_index: bowtie_index
     out: [samfile]
     scatter: [readLengthFile, fastqfile]
     scatterMethod: dotproduct

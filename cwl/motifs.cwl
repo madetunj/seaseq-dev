@@ -7,9 +7,9 @@ requirements:
   - class: InlineJavascriptRequirement
 
 inputs: 
-  reference:
-    type: Directory
-    label: "Genome reference directory"
+  in_fasta:
+    type: File
+    label: "Reference FASTA file"
 
   bedfile:
     type: File
@@ -57,7 +57,7 @@ steps:
 
   BEDfasta:
     in:
-      reference: reference
+      in_fasta: in_fasta
       bedfile: bedfile
     out: [outfile]
     run: bedfasta.cwl

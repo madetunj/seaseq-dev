@@ -82,22 +82,11 @@ inputs:
       prefix: --best
       position: 5
 
-  reference:
-    type: Directory
-    label: "Genome reference directory"
+  bowtie_index:
+    type: File
+    label: "Bowtie index file"
     inputBinding:
       position: 6
-      valueFrom: |
-        ${
-            for (var i = 0; i < self.listing.length; i++) {
-                if (self.listing[i].path.split('.').slice(-3).join('.') == 'rev.1.ebwt') {
-                  return self.listing[i].path.split('.').slice(0,-3).join('.');
-                }
-            }
-            return null;
-        }
-    doc: |
-      Folder with Bowtie indices
 
   fastqfile:
     type: File
