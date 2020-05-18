@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [ flanking.pl ]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 doc: |
   flanking.pl summits.bed 50 > summits-flank50.bed

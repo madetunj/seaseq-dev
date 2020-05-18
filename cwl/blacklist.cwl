@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [intersectBed, -v]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: bedtools intersect, to remove blacklist
 doc: |

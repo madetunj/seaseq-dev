@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [basicfastqstats.sh]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
 - class: InlineJavascriptRequirement

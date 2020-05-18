@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [SICER-rb_custom.sh]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: SICER - Broad Peaks
 doc: |

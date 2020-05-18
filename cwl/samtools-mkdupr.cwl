@@ -3,6 +3,9 @@ cwlVersion: v1.0
 baseCommand: [samtools, markdup, -r]
 class: CommandLineTool
 label: mark and remove duplicates from bam file
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
 - class: ShellCommandRequirement

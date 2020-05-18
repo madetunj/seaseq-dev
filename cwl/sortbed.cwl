@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [sort-bed]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: Using bedops to sort bed file
 doc: |

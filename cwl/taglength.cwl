@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [tagLength.sh]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 inputs:
   datafile:

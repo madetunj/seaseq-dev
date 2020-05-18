@@ -3,6 +3,9 @@ cwlVersion: v1.0
 baseCommand: [samtools, sort]
 class: CommandLineTool
 label: sort bam file
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
 - class: ShellCommandRequirement

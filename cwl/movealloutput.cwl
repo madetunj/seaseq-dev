@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [ mkdir, -p ]
 class: CommandLineTool 
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: move files
 

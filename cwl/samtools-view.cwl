@@ -3,6 +3,9 @@ cwlVersion: v1.0
 baseCommand: [samtools, view]
 class: CommandLineTool
 label: convert sam to bam file
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
 - class: ShellCommandRequirement

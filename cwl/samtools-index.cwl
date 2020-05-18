@@ -3,6 +3,9 @@ cwlVersion: v1.0
 baseCommand: [samtools, index]
 class: CommandLineTool
 label: index bam file
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
   InitialWorkDirRequirement:

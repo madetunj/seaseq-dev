@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [intersectBed]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: number of overlap of A with B
 doc: |

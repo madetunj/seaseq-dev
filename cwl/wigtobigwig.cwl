@@ -3,6 +3,9 @@ cwlVersion: v1.0
 baseCommand: [wigToBigWig, -clip]
 class: CommandLineTool
 label: convert ascii format wig file to binary big wig format
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
 - class: ShellCommandRequirement

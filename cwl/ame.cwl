@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: ame
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: AME - Analysis of Motif Enrichment
 doc: |

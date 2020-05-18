@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [ sicer ]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: SICER new version - Broad Peaks
 doc: |

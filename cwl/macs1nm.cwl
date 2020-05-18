@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [macs14]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: MACS1 - NoModel
 doc: |

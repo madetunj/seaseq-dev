@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [samtools, flagstat]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: SamTools flagstat
 doc: |

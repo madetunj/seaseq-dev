@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: bowtie
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 #INITIAL SYNTAX
 label: Bowtie on ChipSeq reads

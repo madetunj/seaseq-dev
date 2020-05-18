@@ -5,6 +5,9 @@ class: CommandLineTool
 label: Quality metrics using PhantomPeaksQual tool
 doc: |
   run_spp.R -c=<bam> -savp -out=<outfile name> 
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 requirements:
 - class: InlineJavascriptRequirement

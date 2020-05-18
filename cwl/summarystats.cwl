@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [ summaryfacts.pl ]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: QC on the peaks file
 doc: |

@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 class: CommandLineTool
 baseCommand: [ normalize_WIG_to_RPM.pl ]
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 doc: |
   Normalize peaks wig score per million

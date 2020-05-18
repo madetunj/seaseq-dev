@@ -2,6 +2,9 @@
 cwlVersion: v1.0
 baseCommand: [ bedtools, getfasta ]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 doc: |
   bedtools getfasta -fi <reference fa> -bed <peads bed> -fo <fasta outputfile>

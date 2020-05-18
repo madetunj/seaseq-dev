@@ -3,6 +3,9 @@ cwlVersion: v1.0
 baseCommand: [igvtools, toTDF]
 #[java, -jar, /research/rgs01/project_space/abrahgrp/Software_Dev_Sandbox/common/madetunj/software/igvtools/igvtools_2.3.2.jar, toTDF]
 class: CommandLineTool
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/seaseq
 
 label: IGVTOOLS - convert to TDF
 doc: |
