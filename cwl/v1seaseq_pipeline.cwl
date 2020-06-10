@@ -54,15 +54,148 @@ inputs:
   feature: string?
 
 outputs:
-  finalDir:
+  sam_sort:
+    outputSource: SamSort/outfile
+    type: File[]
+
+  fastq_metrics:
+    outputSource: BasicMetrics/metrics_out
+    type: File[]
+
+  rmdup_bam:
+    outputSource: SamIndex/outfile
+    type: File[]
+
+  bklist_bam: 
+    outputSource: BkIndex/outfile
+    type: File[]
+
+  bamqc_html:
+    outputSource: BamQC/htmlfile
+    type: File[]
+
+  bamqc_zip:
+    outputSource: BamQC/zipfile
+    type: File[]
+
+  readqc_zip:
+    outputSource: ReadQC/zipfile
+    type: File[]
+
+  readqc_html:
+    outputSource: ReadQC/htmlfile
+    type: File[]
+ 
+# MACS-AUTO
+  macsDir:
     type: Directory[]
-    label: "output directory of the analysis result for each fastqfile"
-    outputSource: MoveFiles/finalDir
+    outputSource: MACS-Auto/macsDir
+
+# MACS-ALL
+  allmacsDir:
+    type: Directory[]
+    outputSource: MACS-All/macsDir
+
+# MACS-NM
+  nmmacsDir:
+    type: Directory[]
+    outputSource: MACS-NM/macsDir
+
+#VISUAL
+  rpmwig:
+    type: File[]
+    outputSource: WIG-Auto/rpmwig
+
+  outBW:
+    outputSource: WIG-Auto/outBW
+    type: File[]
+
+  outtdf:
+    outputSource: WIG-Auto/outtdf
+    type: File[]
+
+  allrpmwig:
+    type: File[]
+    outputSource: WIG-All/rpmwig
+
+  alloutBW:
+    outputSource: WIG-All/outBW
+    type: File[]
+
+  allouttdf:
+    outputSource: WIG-All/outtdf
+    type: File[]
+
+  nmrpmwig:
+    type: File[]
+    outputSource: WIG-NM/rpmwig
+
+  nmoutBW:
+    outputSource: WIG-NM/outBW
+    type: File[]
+
+  nmouttdf:
+    outputSource: WIG-NM/outtdf
+    type: File[]
+
+# MOTIFs & Summits output
+  bedfasta:
+    type: File[]
+    outputSource: MOTIFS/bedfasta
+
+  flankbed:
+    type: File[]
+    outputSource: FlankBED/outfile
+    
+  memechipdir:
+    type: Directory[]
+    outputSource: MOTIFS/memechipdir
+
+  summitmemechipdir:
+    type: Directory[]
+    outputSource: SummitMOTIFS/memechipdir
+
+  amedir:
+    type: Directory[]
+    outputSource: MOTIFS/amedir
+
+  summitamedir:
+    type: Directory[]
+    outputSource: SummitMOTIFS/amedir
+    
+# METAGENE output
+  metagenesDir:
+    type: Directory[]
+    outputSource: MetaGene/metagenesDir
+
+# SICER output
+  sicerDir:
+    type: Directory[]
+    outputSource: SICER/sicerDir
+
+# ROSE output
+  roseoutput:
+    type: Directory[]
+    outputSource: ROSE/RoseDir
+
+# QC Control & Statistics output
+  statsfile:
+    type: File[]
+    outputSource: PeaksQC/statsfile
+
+  htmlfile:
+    type: File[]
+    outputSource: PeaksQC/htmlfile
+    
+  textfile:
+    type: File[]
+    outputSource: PeaksQC/textfile
 
 steps:
   BasicMetrics:
     requirements:
       ResourceRequirement:
+        #ramMax: 20000
         coresMin: 1
     in: 
       fastqfile: fastqfile
@@ -87,6 +220,7 @@ steps:
   Bowtie:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 2
     run: bowtie.cwl
     in:
@@ -176,6 +310,7 @@ steps:
   MACS-Auto:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       treatmentfile: BkIndex/outfile
@@ -200,6 +335,7 @@ steps:
   MACS-All:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       treatmentfile: BkIndex/outfile
@@ -225,6 +361,7 @@ steps:
   MACS-NM:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       treatmentfile: BkIndex/outfile
@@ -294,6 +431,7 @@ steps:
   SICER:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       species: species
@@ -312,6 +450,7 @@ steps:
   ROSE:
     requirements:
       ResourceRequirement:
+        #ramMax: 20000
         coresMin: 1
     in:
       species: species
@@ -336,6 +475,7 @@ steps:
   SortBed:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       infile: Bklist2Bed/outfile
@@ -346,6 +486,7 @@ steps:
   runSPP:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       infile: BkIndex/outfile
@@ -356,6 +497,7 @@ steps:
   CountIntersectBed:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       peaksbed: MACS-Auto/peaksbedfile
@@ -368,6 +510,7 @@ steps:
   PeaksQC:
     requirements:
       ResourceRequirement:
+        #ramMax: 10000
         coresMin: 1
     in:
       fastqmetrics: BasicMetrics/metrics_out
@@ -383,46 +526,4 @@ steps:
     out: [ statsfile, htmlfile, textfile ]
     run: summarystats.cwl
     scatter: [fastqmetrics, fastqczip, sppfile, bambed, countsfile, peaksxls, bamflag, rmdupflag, bkflag, rosedir]
-    scatterMethod: dotproduct
-
-  MoveFiles:
-    requirements:
-      ResourceRequirement:
-        coresMin: 1
-    in:
-      sam_sort: SamSort/outfile
-      fastq_metrics: BasicMetrics/metrics_out
-      rmdup_bam: SamIndex/outfile
-      bklist_bam: BkIndex/outfile
-      bamqc_html: BamQC/htmlfile
-      bamqc_zip: BamQC/zipfile
-      readqc_zip: ReadQC/zipfile
-      readqc_html: ReadQC/htmlfile
-      macsDir: MACS-Auto/macsDir
-      allmacsDir: MACS-All/macsDir
-      nmmacsDir: MACS-NM/macsDir
-      rpmwig: WIG-Auto/rpmwig
-      outBW: WIG-Auto/outBW
-      outtdf: WIG-Auto/outtdf
-      allrpmwig: WIG-All/rpmwig
-      alloutBW: WIG-All/outBW
-      allouttdf: WIG-All/outtdf
-      nmrpmwig: WIG-NM/rpmwig
-      nmoutBW: WIG-NM/outBW
-      nmouttdf: WIG-NM/outtdf
-      bedfasta: MOTIFS/bedfasta
-      flankbed: FlankBED/outfile
-      memechipdir: MOTIFS/memechipdir
-      summitmemechipdir: SummitMOTIFS/memechipdir
-      amedir: MOTIFS/amedir
-      summitamedir: SummitMOTIFS/amedir
-      metagenesDir: MetaGene/metagenesDir
-      sicerDir: SICER/sicerDir
-      roseoutput: ROSE/RoseDir
-      statsfile: PeaksQC/statsfile
-      htmlfile: PeaksQC/htmlfile
-      textfile: PeaksQC/textfile
-    out: [ finalDir ]
-    run: movealloutput.cwl
-    scatter: [ sam_sort, fastq_metrics, rmdup_bam, bklist_bam, bamqc_html, bamqc_zip, readqc_zip, readqc_html, macsDir, allmacsDir, nmmacsDir, rpmwig, outBW, outtdf, allrpmwig, alloutBW, allouttdf, nmrpmwig, nmoutBW, nmouttdf, bedfasta, flankbed, memechipdir, summitmemechipdir, amedir, summitamedir, metagenesDir, sicerDir, roseoutput, statsfile, htmlfile, textfile ]
     scatterMethod: dotproduct

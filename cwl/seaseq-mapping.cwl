@@ -66,7 +66,6 @@ steps:
   BasicMetrics:
     requirements:
       ResourceRequirement:
-        ramMax: 20000
         coresMin: 1
     in: 
       fastqfile: fastqfile
@@ -91,8 +90,7 @@ steps:
   Bowtie:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
-        coresMin: 20
+        coresMin: 2
     run: bowtie.cwl
     in:
       readLengthFile: TagLen/tagLength
