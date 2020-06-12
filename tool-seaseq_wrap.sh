@@ -76,15 +76,12 @@ echo "STATUS:  Temporary files named with $NEW_UUID"
 mkdir -p $tmp $out
 rm -rf $jobstore $logtxt
 
-toil-cwl-runner --batchSystem=lsf \
+cwltool \
 --no-container \
 --preserve-entire-environment \
---disableCaching \
---logFile $logtxt \
---jobStore $jobstore \
---clean never \
---workDir $tmp \
---cleanWorkDir never \
+--copy-outputs \
+--leave-tmpdir \
+--tmpdir-prefix $tmp \
 --outdir $out \
 $seaseqworkflow $inputyml 1>$logout 2>$logerr
 # ------
@@ -96,8 +93,8 @@ if [ -s $logout ]
 then
 
   ##extracting relevant files from 1st step to the next step & to outputfolder
-  OUTPUTFOLDER=$(chromatinSEreadjson.pl -i $logout -s 1 -toil)
-  chromatinSEreadjson.pl -i $logout -s 2 -f $OUTPUTFOLDER -toil
+  OUTPUTFOLDER=$(chromatinSEreadjson.pl -i $logout -s 1)
+  chromatinSEreadjson.pl -i $logout -s 2 -f $OUTPUTFOLDER
 
   #rm -rf *$NEW_UUID*
   mkdir -p $outputfolder

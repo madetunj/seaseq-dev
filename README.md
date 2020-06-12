@@ -74,6 +74,7 @@ motifdatabases:
 
 ## EXAMPLE
 
-We provided example instructions for running under [Toil](https://toil.readthedocs.io/en/latest/) on our St. Jude HPC LSF cluster.
+We provided example instructions for running under [Toil]
+(https://toil.readthedocs.io/en/latest/) on our St. Jude HPC LSF cluster.
 
 

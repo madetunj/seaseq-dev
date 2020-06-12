@@ -27,8 +27,8 @@ inputs:
     type: File
     inputBinding:
       position: 3
-    secondaryFiles: 
-      - .bai
+#    secondaryFiles: 
+#      - .bai
 
   gtffile:
     type: File
