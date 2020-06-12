@@ -25,8 +25,8 @@ inputs:
     label: "BAM file"
     inputBinding:
       position: 2
-    secondaryFiles: 
-      - .bai
+#    secondaryFiles: 
+#      - .bai
     
   outputdir:
     type: string

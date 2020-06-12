@@ -1,4 +1,6 @@
 #!/usr/bin/bash
+echo 'CWLEXEC does not have the no-docker option'
+exit;
 # seaseq_wrap.sh
 # ====== README
 # This is the seaseq wrapper script written for
@@ -6,8 +8,8 @@
 # This script works with St. Jude, HPC LSF cluster.
 # ------
 # To Run on St. Jude LSF.
-#   bsub -P watcher -q compbio -J seaseq -o seaseq-out -e seaseq-err -N ./seaseq_wrap.sh <yml> <OUTPUTFOLDER>
-#   bsub -P watcher -q compbio -J seaseq -o seaseq-out -e seaseq-err -N ./seaseq_wrap.sh inputparameters.yml OUTPUTFOLDER
+#   bsub -P watcher -q compbio -J ss-Exec -o ss-Exec-out -e ss-Exec-err -N ./seaseq_wrap.sh <yml> <OUTPUTFOLDER>
+#   bsub -P watcher -q compbio -J ss-Exec -o ss-Exec-out -e ss-Exec-err -N ./seaseq_wrap.sh inputparameters.yml OUTPUTFOLDER
 # ------
 # Programs and versions used
 #   bowtie v. 1.2.2
@@ -69,24 +71,16 @@ source $seaseqroot/sjhpc_modules.ml
 # ======
 
 # ====== WORKFLOW EXECUTION
-# Toil Workflow Execution on St. Jude HPC Cluster
+# CWLEXEC Workflow Execution on St. Jude HPC Cluster
 # ------
 echo "STATUS:  Temporary files named with $NEW_UUID"
 
 mkdir -p $tmp $out
 rm -rf $jobstore $logtxt
 
-toil-cwl-runner --batchSystem=lsf \
---no-container \
---preserve-entire-environment \
---disableCaching \
---logFile $logtxt \
---jobStore $jobstore \
---clean never \
---workDir $tmp \
---cleanWorkDir never \
---outdir $out \
-$seaseqworkflow $inputyml 1>$logout 2>$logerr
+config="$seaseqroot/LSFconfig.json"
+cwlexec -p -w $tmp -o $out -c $config -p $seaseqworkflow $inputyml 1>$logout 2>$logerr
+
 # ------
 # Extract and Clean Up output files.
 #   Relevant files are moved to indicated "$outputfolder"
@@ -96,8 +90,8 @@ if [ -s $logout ]
 then
 
   ##extracting relevant files from 1st step to the next step & to outputfolder
-  OUTPUTFOLDER=$(chromatinSEreadjson.pl -i $logout -s 1 -toil)
-  chromatinSEreadjson.pl -i $logout -s 2 -f $OUTPUTFOLDER -toil
+  OUTPUTFOLDER=$(chromatinSEreadjson.pl -i $logout -s 1)
+  chromatinSEreadjson.pl -i $logout -s 2 -f $OUTPUTFOLDER
 
   #rm -rf *$NEW_UUID*
   mkdir -p $outputfolder

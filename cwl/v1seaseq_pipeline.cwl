@@ -11,12 +11,13 @@ doc: |
 
 requirements:
   - class: SubworkflowFeatureRequirement
+  - class: ScatterFeatureRequirement
 
 inputs:
 # main files & directorys
   reference: Directory
   gtffile: File
-  fastqfile: File
+  fastqfile: File[]
   chromsizes: File
   blacklistfile: File
   motifdatabases: File[]
@@ -55,169 +56,172 @@ inputs:
 outputs:
   sam_sort:
     outputSource: SamSort/outfile
-    type: File
+    type: File[]
 
   fastq_metrics:
     outputSource: BasicMetrics/metrics_out
-    type: File
+    type: File[]
 
   rmdup_bam:
     outputSource: SamIndex/outfile
-    type: File
+    type: File[]
 
   bklist_bam: 
     outputSource: BkIndex/outfile
-    type: File
+    type: File[]
 
   bamqc_html:
     outputSource: BamQC/htmlfile
-    type: File
+    type: File[]
 
   bamqc_zip:
     outputSource: BamQC/zipfile
-    type: File
+    type: File[]
 
   readqc_zip:
     outputSource: ReadQC/zipfile
-    type: File
+    type: File[]
 
   readqc_html:
     outputSource: ReadQC/htmlfile
-    type: File
+    type: File[]
  
 # MACS-AUTO
   macsDir:
-    type: Directory
+    type: Directory[]
     outputSource: MACS-Auto/macsDir
 
 # MACS-ALL
   allmacsDir:
-    type: Directory
+    type: Directory[]
     outputSource: MACS-All/macsDir
 
 # MACS-NM
   nmmacsDir:
-    type: Directory
+    type: Directory[]
     outputSource: MACS-NM/macsDir
 
 #VISUAL
   rpmwig:
-    type: File
+    type: File[]
     outputSource: WIG-Auto/rpmwig
 
   outBW:
     outputSource: WIG-Auto/outBW
-    type: File
+    type: File[]
 
   outtdf:
     outputSource: WIG-Auto/outtdf
-    type: File
+    type: File[]
 
   allrpmwig:
-    type: File
+    type: File[]
     outputSource: WIG-All/rpmwig
 
   alloutBW:
     outputSource: WIG-All/outBW
-    type: File
+    type: File[]
 
   allouttdf:
     outputSource: WIG-All/outtdf
-    type: File
+    type: File[]
 
   nmrpmwig:
-    type: File
+    type: File[]
     outputSource: WIG-NM/rpmwig
 
   nmoutBW:
     outputSource: WIG-NM/outBW
-    type: File
+    type: File[]
 
   nmouttdf:
     outputSource: WIG-NM/outtdf
-    type: File
+    type: File[]
 
 # MOTIFs & Summits output
   bedfasta:
-    type: File
+    type: File[]
     outputSource: MOTIFS/bedfasta
 
   flankbed:
-    type: File
+    type: File[]
     outputSource: FlankBED/outfile
     
   memechipdir:
-    type: Directory
+    type: Directory[]
     outputSource: MOTIFS/memechipdir
 
   summitmemechipdir:
-    type: Directory
+    type: Directory[]
     outputSource: SummitMOTIFS/memechipdir
 
   amedir:
-    type: Directory
+    type: Directory[]
     outputSource: MOTIFS/amedir
 
   summitamedir:
-    type: Directory
+    type: Directory[]
     outputSource: SummitMOTIFS/amedir
     
 # METAGENE output
   metagenesDir:
-    type: Directory
+    type: Directory[]
     outputSource: MetaGene/metagenesDir
 
 # SICER output
   sicerDir:
-    type: Directory
+    type: Directory[]
     outputSource: SICER/sicerDir
 
 # ROSE output
   roseoutput:
-    type: Directory
+    type: Directory[]
     outputSource: ROSE/RoseDir
 
 # QC Control & Statistics output
   statsfile:
-    type: File
+    type: File[]
     outputSource: PeaksQC/statsfile
 
   htmlfile:
-    type: File
+    type: File[]
     outputSource: PeaksQC/htmlfile
     
   textfile:
-    type: File
+    type: File[]
     outputSource: PeaksQC/textfile
 
 steps:
   BasicMetrics:
     requirements:
       ResourceRequirement:
-        ramMax: 20000
+        #ramMax: 20000
         coresMin: 1
     in: 
       fastqfile: fastqfile
     out: [metrics_out]
     run: basicfastqstats.cwl
+    scatter: fastqfile
 
   TagLen:
     in: 
       datafile: BasicMetrics/metrics_out
     out: [tagLength]
     run: taglength.cwl
+    scatter: datafile
    
   ReadQC:
     in:
       infile: fastqfile
     out: [htmlfile, zipfile]
     run: fastqc.cwl
+    scatter: infile
 
   Bowtie:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
-        coresMin: 20
+        #ramMax: 10000
+        coresMin: 2
     run: bowtie.cwl
     in:
       readLengthFile: TagLen/tagLength
@@ -228,24 +232,29 @@ steps:
       processors: processors
       reference: reference
     out: [samfile]
+    scatter: [readLengthFile, fastqfile]
+    scatterMethod: dotproduct
 
   SamView:
     in:
       infile: Bowtie/samfile
     out: [outfile]
     run: samtools-view.cwl
+    scatter: infile
 
   BamQC:
     in:
       infile: SamView/outfile
     out: [htmlfile, zipfile]
     run: fastqc.cwl
+    scatter: infile
 
   SamSort:
     in:
       infile: SamView/outfile
     out: [outfile]
     run: samtools-sort.cwl
+    scatter: infile
 
   BkList:
     in:
@@ -253,48 +262,55 @@ steps:
       blacklistfile: blacklistfile
     out: [outfile]
     run: blacklist.cwl
+    scatter: infile
 
   BkIndex:
     in:
       infile: BkList/outfile
     out: [outfile]
     run: samtools-index.cwl
+    scatter: infile
 
   SamRMDup:
     in:
       infile: BkList/outfile
     out: [outfile]
     run: samtools-mkdupr.cwl
+    scatter: infile
 
   SamIndex:
     in:
       infile: SamRMDup/outfile
     out: [outfile]
     run: samtools-index.cwl
+    scatter: infile
 
   STATbam:
     in:
       infile: SamView/outfile
     out: [outfile]
     run: samtools-flagstat.cwl
+    scatter: infile
 
   STATrmdup:
     in:
       infile: SamRMDup/outfile
     out: [outfile]
     run: samtools-flagstat.cwl
+    scatter: infile
 
   STATbk:
     in:
       infile: BkList/outfile
     out: [outfile]
     run: samtools-flagstat.cwl
+    scatter: infile
 
 # PEAK CALLING & VISUALS
   MACS-Auto:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       treatmentfile: BkIndex/outfile
@@ -304,6 +320,7 @@ steps:
       single_profile: single_profile
     out: [ peaksbedfile, peaksxlsfile, summitsfile, wigfile, macsDir ]
     run: macs1call.cwl
+    scatter: treatmentfile
 
   WIG-Auto:
     in:
@@ -312,11 +329,13 @@ steps:
       chromsizes: chromsizes
     out: [ rpmwig, outBW, outtdf ]
     run: visualization.cwl
+    scatter: [wigfile, peaksxls]
+    scatterMethod: dotproduct
 
   MACS-All:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       treatmentfile: BkIndex/outfile
@@ -327,6 +346,7 @@ steps:
       single_profile: single_profile
     out: [ peaksbedfile, peaksxlsfile, summitsfile, wigfile, macsDir ]
     run: macs1call.cwl
+    scatter: treatmentfile
 
   WIG-All:
     in:
@@ -335,11 +355,13 @@ steps:
       chromsizes: chromsizes
     out: [ rpmwig, outBW, outtdf ]
     run: visualization.cwl
+    scatter: [wigfile, peaksxls]
+    scatterMethod: dotproduct
 
   MACS-NM:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       treatmentfile: BkIndex/outfile
@@ -348,6 +370,7 @@ steps:
       single_profile: single_profile
     out: [ peaksbedfile, peaksxlsfile, summitsfile, wigfile, macsDir ]
     run: macs1nm.cwl
+    scatter: treatmentfile
 
   WIG-NM:
     in:
@@ -356,6 +379,8 @@ steps:
       chromsizes: chromsizes
     out: [ rpmwig, outBW, outtdf ]
     run: visualization.cwl
+    scatter: [wigfile, peaksxls]
+    scatterMethod: dotproduct
 
 # MOTIF analysis
   MOTIFS:
@@ -365,6 +390,7 @@ steps:
       motifdatabases: motifdatabases
     out: [memechipdir, amedir, bedfasta]
     run: motifs.cwl
+    scatter: bedfile
 
 #SUMMIT-MOTIF analysis
   FlankBED:
@@ -373,6 +399,7 @@ steps:
       flank: flank
     out: [outfile]
     run: flankbed.cwl
+    scatter: bedfile
   
   SummitMOTIFS:
     in:
@@ -381,6 +408,7 @@ steps:
       motifdatabases: motifdatabases
     out: [memechipdir, amedir, bedfasta]
     run: motifs.cwl
+    scatter: bedfile
     
 # METAGENE analysis
   MetaGene:
@@ -389,7 +417,8 @@ steps:
       gtffile: gtffile
       chromsizes: chromsizes
     out:  [ metagenesDir ] 
-    run: bamtogff-scatter.cwl
+    run: bamtogff.cwl
+    scatter: bamfile
 
 # SICER broad peaks caller
   B2Bed:
@@ -397,11 +426,12 @@ steps:
       infile: SamIndex/outfile
     out: [ outfile ]
     run: bamtobed.cwl
+    scatter: infile
 
   SICER:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       species: species
@@ -414,12 +444,13 @@ steps:
       treatmentbedfile: B2Bed/outfile
     run: sicer.cwl
     out: [ sicerDir ]
+    scatter: treatmentbedfile
 
 # ROSE enhancer caller
   ROSE:
     requirements:
       ResourceRequirement:
-        ramMax: 20000
+        #ramMax: 20000
         coresMin: 1
     in:
       species: species
@@ -429,7 +460,9 @@ steps:
       fileA: MACS-All/peaksbedfile
       fileB: MACS-Auto/peaksbedfile
     out: [ RoseDir ]
-    run: roseNC-scatter.cwl
+    run: roseNC.cwl
+    scatter: [bamfile, fileA, fileB]
+    scatterMethod: dotproduct
 
 # Quality Control & Statistics
   Bklist2Bed:
@@ -437,42 +470,47 @@ steps:
       infile: BkIndex/outfile
     out: [ outfile ]
     run: bamtobed.cwl
+    scatter: infile
 
   SortBed:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       infile: Bklist2Bed/outfile
     out: [outfile]
     run: sortbed.cwl
+    scatter: infile
 
   runSPP:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       infile: BkIndex/outfile
     out: [spp_out]
     run: runSPP.cwl
+    scatter: infile
 
   CountIntersectBed:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       peaksbed: MACS-Auto/peaksbedfile
       bamtobed: SortBed/outfile
     out: [outfile]
     run: intersectbed.cwl
+    scatter: [peaksbed, bamtobed]
+    scatterMethod: dotproduct
 
   PeaksQC:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     in:
       fastqmetrics: BasicMetrics/metrics_out
@@ -487,3 +525,5 @@ steps:
       rosedir: ROSE/RoseDir
     out: [ statsfile, htmlfile, textfile ]
     run: summarystats.cwl
+    scatter: [fastqmetrics, fastqczip, sppfile, bambed, countsfile, peaksxls, bamflag, rmdupflag, bkflag, rosedir]
+    scatterMethod: dotproduct

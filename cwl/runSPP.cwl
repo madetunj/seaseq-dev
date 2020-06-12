@@ -6,12 +6,18 @@ label: Quality metrics using PhantomPeaksQual tool
 doc: |
   run_spp.R -c=<bam> -savp -out=<outfile name> 
 
+hints:
+  DockerRequirement:
+    dockerPull: madetunj/spp:v1.16.0
+
 requirements:
 - class: InlineJavascriptRequirement
   expressionLib:
   - var var_output_name = function() {
       return inputs.infile.nameroot.split('.bam')[0]+'-spp.out';
    };
+- class: InitialWorkDirRequirement
+  listing: [ $(inputs.infile) ]
 
 inputs:
   infile:
