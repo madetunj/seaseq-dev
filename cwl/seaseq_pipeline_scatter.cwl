@@ -15,7 +15,18 @@ requirements:
 
 inputs:
 # main files & directorys
-  reference: Directory
+  reference: Directory?
+
+  #individual indexes
+  bowtieindex_1: File?
+  bowtieindex_2: File?
+  bowtieindex_3: File?
+  bowtieindex_4: File?
+  bowtieindex_rev_1: File?
+  bowtieindex_rev_2: File?
+  ref_fasta: File?
+  ref_fasta_index: File?
+
   gtffile: File
   fastqfile: File[]
   chromsizes: File
@@ -99,6 +110,12 @@ steps:
       limit_alignments: limit_alignments
       processors: processors
       reference: reference
+      bowtieindex_1: bowtieindex_1
+      bowtieindex_2: bowtieindex_2
+      bowtieindex_3: bowtieindex_3
+      bowtieindex_4: bowtieindex_4
+      bowtieindex_rev_1: bowtieindex_rev_1
+      bowtieindex_rev_2: bowtieindex_rev_2
     out: [samfile]
     scatter: [readLengthFile, fastqfile]
     scatterMethod: dotproduct
@@ -254,6 +271,8 @@ steps:
   MOTIFS:
     in:
       reference: reference
+      ref_fasta: ref_fasta
+      ref_fasta_index: ref_fasta_index
       bedfile: MACS-Auto/peaksbedfile
       motifdatabases: motifdatabases
     out: [memechipdir, amedir, bedfasta]
@@ -272,6 +291,8 @@ steps:
   SummitMOTIFS:
     in:
       reference: reference
+      ref_fasta: ref_fasta
+      ref_fasta_index: ref_fasta_index
       bedfile: FlankBED/outfile
       motifdatabases: motifdatabases
     out: [memechipdir, amedir, bedfasta]
