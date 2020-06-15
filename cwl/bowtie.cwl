@@ -28,7 +28,20 @@ requirements:
         return inputs.readLengthFile.nameroot;
       }
    };
-
+  - var var_indexName = function() {
+      if (inputs.bowtieindex_rev_1 != null) {
+        return inputs.bowtieindex_rev_1.path.split('.rev').slice(0,-1);
+      }
+   };
+   
+- class: InitialWorkDirRequirement
+  listing: [ $(inputs.bowtieindex_rev_1),
+            $(inputs.bowtieindex_rev_2),
+            $(inputs.bowtieindex_1),
+            $(inputs.bowtieindex_2),
+            $(inputs.bowtieindex_3),
+            $(inputs.bowtieindex_4),
+          ]
 inputs:
   output_prefix:
     type: string?
@@ -87,7 +100,7 @@ inputs:
       position: 5
 
   reference:
-    type: Directory
+    type: Directory?
     label: "Genome reference directory"
     inputBinding:
       position: 6
@@ -103,6 +116,30 @@ inputs:
     doc: |
       Folder with Bowtie indices
 
+  bowtieindex_1:
+    type: File?
+
+  bowtieindex_2:
+    type: File?
+        
+  bowtieindex_3:
+    type: File?
+        
+  bowtieindex_4:
+    type: File?
+    
+  bowtieindex_rev_1:
+    type: File?
+    inputBinding:
+      position: 6
+      valueFrom: |
+        ${
+            return var_indexName();
+        }
+      
+  bowtieindex_rev_2:
+    type: File?
+  
   fastqfile:
     type: File
     label: "FastQ file"

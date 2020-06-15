@@ -1,9 +1,41 @@
 #Files and Directories
 #not scatter
 
-reference: 
-  class: Directory
-  location: ./hg19/CHR21INDEX
+#reference: 
+#  class: Directory
+#  location: ./hg19/CHR21INDEX
+
+bowtieindex_1:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.1.ebwt
+
+bowtieindex_2:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.2.ebwt
+
+bowtieindex_3:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.3.ebwt
+
+bowtieindex_4:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.4.ebwt
+
+bowtieindex_rev_1:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.rev.1.ebwt
+
+bowtieindex_rev_2:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.rev.2.ebwt
+
+ref_fasta:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.fa
+
+ref_fasta_index:
+  class: File
+  location: ./hg19/CHR21INDEX/hg19_chr21.fa.fai
 
 fastqfile: 
   class: File
