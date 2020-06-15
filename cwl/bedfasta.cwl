@@ -22,10 +22,13 @@ requirements:
       }
    };
 
+- class: InitialWorkDirRequirement
+  listing: [ $(inputs.ref_fasta), $(inputs.ref_fasta_index) ]
+
 inputs:
   reference:
     label: "Genome reference directory"
-    type: Directory
+    type: Directory?
     inputBinding:
       prefix: -fi
       position: 1
@@ -38,6 +41,15 @@ inputs:
             }
             return null;
         }
+
+  ref_fasta:
+    type: File?
+    inputBinding:
+      prefix: -fi
+      position: 1
+
+  ref_fasta_index:
+    type: File?
 
   bedfile:
     type: File

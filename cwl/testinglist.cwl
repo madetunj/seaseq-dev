@@ -20,13 +20,26 @@ inputs:
   ref_fasta_index: File?
 
 
+  gtffile: File
   fastqfile: File[]
   chromsizes: File
   blacklistfile: File
+  motifdatabases: File[]
+
   best_alignments: boolean?
   good_alignments: int?
   limit_alignments: int?
   processors: int?
+
+  # MACS
+  nomodel: boolean?
+  wiggle: boolean?
+  single_profile: boolean?
+  shiftsize: int?
+  space: int?
+  pvalue: string?
+  keep_dup: string?
+  flank: int?
 
 outputs:
   sam_sort:
@@ -73,6 +86,23 @@ outputs:
     outputSource: STATrmdup/outfile
     type: File[]
 
+# MACS-AUTO
+  macsDir:
+    type: Directory[]
+    outputSource: MACS-Auto/macsDir
+
+# MOTIFs & Summits output
+  bedfasta:
+    type: File[]
+    outputSource: MOTIFS/bedfasta
+
+  memechipdir:
+    type: Directory[]
+    outputSource: MOTIFS/memechipdir
+
+  amedir:
+    type: Directory[]
+    outputSource: MOTIFS/amedir
 
 steps:
   BasicMetrics:
@@ -193,6 +223,29 @@ steps:
     run: samtools-flagstat.cwl
     scatter: infile
 
+# PEAK CALLING & VISUALS
+  MACS-Auto:
+    requirements:
+      ResourceRequirement:
+        coresMin: 1
+    in:
+      treatmentfile: BkIndex/outfile
+      space: space
+      pvalue: pvalue
+      wiggle: wiggle
+      single_profile: single_profile
+    out: [ peaksbedfile, peaksxlsfile, summitsfile, wigfile, macsDir ]
+    run: macs1call.cwl
+    scatter: treatmentfile
 
-doc: |
-  Runs ChIP-Seq SE Mapping FastQ SE files to generate BAM file for step 2 in ChIP-Seq Pipeline.
+# MOTIF analysis
+  MOTIFS:
+    in:
+      reference: reference
+      ref_fasta: ref_fasta
+      ref_fasta_index: ref_fasta_index
+      bedfile: MACS-Auto/peaksbedfile
+      motifdatabases: motifdatabases
+    out: [memechipdir, amedir, bedfasta]
+    run: motifs.cwl
+    scatter: bedfile

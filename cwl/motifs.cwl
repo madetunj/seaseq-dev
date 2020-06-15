@@ -8,8 +8,14 @@ requirements:
 
 inputs: 
   reference:
-    type: Directory
+    type: Directory?
     label: "Genome reference directory"
+
+  ref_fasta:
+    type: File?
+
+  ref_fasta_index:
+    type: File?
 
   bedfile:
     type: File
@@ -57,6 +63,8 @@ steps:
   BEDfasta:
     in:
       reference: reference
+      ref_fasta: ref_fasta
+      ref_fasta_index: ref_fasta_index
       bedfile: bedfile
     out: [outfile]
     run: bedfasta.cwl
