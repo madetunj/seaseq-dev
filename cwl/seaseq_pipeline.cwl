@@ -9,14 +9,14 @@ doc: |
       enhancers & super-enhancers using ROSE, bam density plots 
       using BAM2GFF.
 
+
 requirements:
   - class: SubworkflowFeatureRequirement
 
+
 inputs:
 # main files & directorys
-  reference: Directory?
-
-  #individual indexes
+  #reference + individual indexes
   bowtieindex_1: File?
   bowtieindex_2: File?
   bowtieindex_3: File?
@@ -62,6 +62,7 @@ inputs:
 
   # ROSE
   feature: string?
+
 
 outputs:
   sam_sort:
@@ -201,6 +202,7 @@ outputs:
     type: File
     outputSource: PeaksQC/textfile
 
+
 steps:
   BasicMetrics:
     requirements:
@@ -237,7 +239,6 @@ steps:
       fastqfile: fastqfile
       limit_alignments: limit_alignments
       processors: processors
-      reference: reference
       bowtieindex_1: bowtieindex_1
       bowtieindex_2: bowtieindex_2
       bowtieindex_3: bowtieindex_3
@@ -377,7 +378,6 @@ steps:
 # MOTIF analysis
   MOTIFS:
     in:
-      reference: reference
       ref_fasta: ref_fasta
       ref_fasta_index: ref_fasta_index
       bedfile: MACS-Auto/peaksbedfile
@@ -395,7 +395,6 @@ steps:
   
   SummitMOTIFS:
     in:
-      reference: reference
       ref_fasta: ref_fasta
       ref_fasta_index: ref_fasta_index
       bedfile: FlankBED/outfile

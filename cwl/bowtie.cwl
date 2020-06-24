@@ -99,23 +99,6 @@ inputs:
       prefix: --best
       position: 5
 
-  reference:
-    type: Directory?
-    label: "Genome reference directory"
-    inputBinding:
-      position: 6
-      valueFrom: |
-        ${
-            for (var i = 0; i < self.listing.length; i++) {
-                if (self.listing[i].path.split('.').slice(-3).join('.') == 'rev.1.ebwt') {
-                  return self.listing[i].path.split('.').slice(0,-3).join('.');
-                }
-            }
-            return null;
-        }
-    doc: |
-      Folder with Bowtie indices
-
   bowtieindex_1:
     type: File?
 

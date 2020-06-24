@@ -53,7 +53,7 @@ steps:
   AME:
     requirements:
       ResourceRequirement:
-        ramMax: 10000
+        #ramMax: 10000
         coresMin: 1
     run: ame.cwl
     in:

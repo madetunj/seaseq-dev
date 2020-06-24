@@ -26,22 +26,6 @@ requirements:
   listing: [ $(inputs.ref_fasta), $(inputs.ref_fasta_index) ]
 
 inputs:
-  reference:
-    label: "Genome reference directory"
-    type: Directory?
-    inputBinding:
-      prefix: -fi
-      position: 1
-      valueFrom: |
-        ${
-            for (var i = 0; i < self.listing.length; i++) {
-                if (self.listing[i].path.split('.').slice(-1) == 'fa') {
-                  return self.listing[i].path;
-                }
-            }
-            return null;
-        }
-
   ref_fasta:
     type: File?
     inputBinding:
