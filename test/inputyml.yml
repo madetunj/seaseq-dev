@@ -1,10 +1,6 @@
 #Files and Directories
 #not scatter
 
-#reference: 
-#  class: Directory
-#  location: ./hg19/CHR21INDEX
-
 bowtieindex_1:
   class: File
   location: ./hg19/CHR21INDEX/hg19_chr21.1.ebwt
@@ -59,3 +55,4 @@ motifdatabases:
   - { class: File, path: ./hg19/motifs/JASPAR2018_CORE_vertebrates_redundant.meme }
   - { class: File, path: ./hg19/motifs/CIS-BP.Homo_sapiens.meme }
   
+
